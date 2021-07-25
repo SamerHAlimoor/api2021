@@ -24,6 +24,14 @@ Route::group(['middleware'=>['api','checkPassword','changeLanguge'],'namespace'=
 
 }));
 
+Route::group(['prefix' => 'user','namespace'=>'User'],function (){
+    Route::post('login','AuthController@Login') ;
+});
+
+
+Route::group(['middleware' => ['api','checkPassword','changeLanguage','checkAdminToken:admin-api'], 'namespace' => 'Api'], function () {
+    Route::get('offers', 'CategoriesController@index');
+});
 
 
 
