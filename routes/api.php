@@ -21,11 +21,14 @@ Route::group(['middleware'=>['api','checkPassword','changeLanguge'],'namespace'=
     Route::post('get-main-categories', 'CategoriesController@index');
     Route::post('get-category-byId', 'CategoriesController@getCategoryById');
     Route::post('change-category-status', 'CategoriesController@changeStatus');
+   
 
 }));
 
-Route::group(['prefix' => 'user','namespace'=>'User'],function (){
+Route::group(['prefix' => 'admin','namespace'=>'Admin','middleware' => ['api','checkPassword','changeLanguge']],function (){
     Route::post('login','AuthController@Login') ;
+    Route::post('logout','AuthController@logout')->middleware("publicGuard:admin-api") ;
+
 });
 
 
