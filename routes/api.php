@@ -27,6 +27,8 @@ Route::group(['middleware'=>['api','checkPassword','changeLanguge'],'namespace'=
 
 Route::group(['prefix' => 'admin','namespace'=>'Admin','middleware' => ['api','checkPassword','changeLanguge']],function (){
     Route::post('login','AuthController@Login') ;
+    Route::post('logout','AuthController@logout')->middleware("publicGuard:admin-api") ;
+
 });
 
 

@@ -7,6 +7,7 @@ use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 use Validator;
 use Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
