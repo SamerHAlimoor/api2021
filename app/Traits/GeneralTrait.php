@@ -41,9 +41,9 @@ trait GeneralTrait
 
 
     
-    public function returnValidationError($code = "E001", $validator)
+    public function returnValidationError($validator)
     {
-        return $this->returnError($code, $validator->errors()->first());
+        return $this->returnError(2222,"Error Validation",$validator);
     }
 
 

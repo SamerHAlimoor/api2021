@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
+use Validator;
+use Auth;
 
 class AuthController extends Controller
 {
@@ -13,7 +15,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-
+//validator
         try {
             $rules = [
                 "email" => "required",
@@ -24,23 +26,24 @@ class AuthController extends Controller
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                $code = $this->returnCodeAccordingToInput($validator);
-                return $this->returnValidationError($code, $validator);
+                  $code = $this->returnCodeAccordingToInput($validator);
+                   $validatorg= $validator->errors()->first();
+                   return  $this->returnValidationError($code, $validatorg);
             }
 
-            //login
+           // Login
+           $credentials = $request->only(['email', 'password']);
+           //admin-api in auth that called guard
+           $token = Auth::guard('admin-api')->attempt($credentials);
+           // ازا كانت صحيحة برجعلك توكن كبير ازا كان غلط ما برجعلك شي
+           if (!$token)
+           return $this->returnError('E001', 'بيانات الدخول غير صحيحة');
 
-            $credentials = $request->only(['email', 'password']);
+           $admin = Auth::guard('admin-api')->user();
+           $admin->token = $token;
+           //return token
+           return $this->returnData('admin', $admin);
 
-            $token = Auth::guard('admin-api')->attempt($credentials);
-
-            if (!$token)
-                return $this->returnError('E001', 'بيانات الدخول غير صحيحة');
-
-            $admin = Auth::guard('admin-api')->user();
-            $admin->api_token = $token;
-            //return token
-            return $this->returnData('admin', $admin);
 
         } catch (\Exception $ex) {
             return $this->returnError($ex->getCode(), $ex->getMessage());
