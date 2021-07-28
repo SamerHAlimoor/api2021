@@ -31,6 +31,20 @@ Route::group(['prefix' => 'admin','namespace'=>'Admin','middleware' => ['api','c
 
 });
 
+Route::group(['prefix' => 'user','namespace'=>'User'],function (){
+    Route::post('login','AuthControllerUser@Login') ;
+    Route::post('logout','AuthControllerUser@logout')->middleware("publicGuard:user-api") ;
+
+});
+
+Route::group(['prefix' => 'user' ,'middleware' => 'publicGuard:user-api'],function (){
+    Route::post('profile',function(){
+        return  "You are in Your profile Now"; // return authenticated user data
+    }) ;
+
+
+ });
+
 
 Route::group(['middleware' => ['api','checkPassword','changeLanguage','checkAdminToken:admin-api'], 'namespace' => 'Api'], function () {
     Route::get('offers', 'CategoriesController@index');
